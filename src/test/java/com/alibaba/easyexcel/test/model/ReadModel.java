@@ -99,8 +99,8 @@ public class ReadModel extends BaseReadModel {
     @Override
     public String toString() {
         return "JavaModel{" +
-            "str='" + str + '\'' +
-            ", ff=" + ff +
+//            "str='" + str + '\'' +
+//            ", ff=" + ff +
             ", mm=" + mm +
             ", money=" + money +
             ", times=" + times +

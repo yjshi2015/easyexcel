@@ -8,6 +8,7 @@ import com.alibaba.excel.util.TypeUtil;
 import net.sf.cglib.beans.BeanMap;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jipengfei
@@ -32,8 +33,8 @@ public class ModelBuildEventListener extends AnalysisEventListener {
         if (excelHeadProperty == null) {
             return resultModel;
         }
-        BeanMap.create(resultModel).putAll(
-            TypeUtil.getFieldValues(stringList, excelHeadProperty, context.use1904WindowDate()));
+        Map map = TypeUtil.getFieldValues(stringList, excelHeadProperty, context.use1904WindowDate());
+        BeanMap.create(resultModel).putAll(map);
         return resultModel;
     }
 

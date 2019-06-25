@@ -1,6 +1,7 @@
 package com.alibaba.easyexcel.test;
 
 import com.alibaba.easyexcel.test.listen.ExcelListener;
+import com.alibaba.easyexcel.test.model.AssetsDetailVO;
 import com.alibaba.easyexcel.test.model.ReadModel;
 import com.alibaba.easyexcel.test.model.ReadModel2;
 import com.alibaba.easyexcel.test.util.FileUtil;
@@ -17,33 +18,6 @@ public class ReadTest {
 
 
     /**
-     * 07版本excel读数据量少于1千行数据，内部采用回调方法.
-     *
-     * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
-     */
-    @Test
-    public void simpleReadListStringV2007() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2007.xlsx");
-        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
-        inputStream.close();
-        print(data);
-    }
-
-
-    /**
-     * 07版本excel读数据量少于1千行数据自动转成javamodel，内部采用回调方法.
-     *
-     * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
-     */
-    @Test
-    public void simpleReadJavaModelV2007() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2007.xlsx");
-        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(2, 1, ReadModel.class));
-        inputStream.close();
-        print(data);
-    }
-
-    /**
      * 07版本excel读数据量大于1千行，内部采用回调方法.
      *
      * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
@@ -56,6 +30,7 @@ public class ReadTest {
         inputStream.close();
 
     }
+
     /**
      * 07版本excel读数据量大于1千行，内部采用回调方法.
      *
@@ -63,68 +38,29 @@ public class ReadTest {
      */
     @Test
     public void saxReadJavaModelV2007() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2007.xlsx");
-        ExcelListener excelListener = new ExcelListener();
-        EasyExcelFactory.readBySax(inputStream, new Sheet(2, 1, ReadModel.class), excelListener);
-        inputStream.close();
-    }
+        InputStream inputStream = null;
 
-    /**
-     * 07版本excel读取sheet
-     *
-     * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
-     */
-    @Test
-    public void saxReadSheetsV2007() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2007.xlsx");
-        ExcelListener excelListener = new ExcelListener();
-        ExcelReader excelReader = EasyExcelFactory.getReader(inputStream,excelListener);
-        List<Sheet> sheets = excelReader.getSheets();
-        System.out.println("llll****"+sheets);
-        System.out.println();
-        for (Sheet sheet:sheets) {
-            if(sheet.getSheetNo() ==1) {
-                excelReader.read(sheet);
-            }else if(sheet.getSheetNo() ==2){
-                sheet.setHeadLineMun(1);
-                sheet.setClazz(ReadModel.class);
-                excelReader.read(sheet);
-            }else if(sheet.getSheetNo() ==3){
-                sheet.setHeadLineMun(1);
-                sheet.setClazz(ReadModel2.class);
-                excelReader.read(sheet);
+        try {
+            long begin = System.currentTimeMillis();
+            inputStream = FileUtil.getResourcesFileInputStream("only2.xlsx");
+            ExcelListener excelListener = new ExcelListener();
+            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 1, AssetsDetailVO.class), excelListener);
+            inputStream.close();
+            System.out.println("spend time : " + (System.currentTimeMillis()-begin)/1000 + " s");
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        inputStream.close();
     }
 
 
 
-    /**
-     * 03版本excel读数据量少于1千行数据，内部采用回调方法.
-     *
-     * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
-     */
-    @Test
-    public void simpleReadListStringV2003() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2003.xls");
-        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
-        inputStream.close();
-        print(data);
-    }
 
-    /**
-     * 03版本excel读数据量少于1千行数据转成javamodel，内部采用回调方法.
-     *
-     * @throws IOException 简单抛出异常，真实环境需要catch异常,同时在finally中关闭流
-     */
-    @Test
-    public void simpleReadJavaModelV2003() throws IOException {
-        InputStream inputStream = FileUtil.getResourcesFileInputStream("2003.xls");
-        List<Object> data = EasyExcelFactory.read(inputStream, new Sheet(2, 1, ReadModel.class));
-        inputStream.close();
-        print(data);
-    }
 
     /**
      * 03版本excel读数据量大于1千行数据，内部采用回调方法.
